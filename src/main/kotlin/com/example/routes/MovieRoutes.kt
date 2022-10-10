@@ -1,19 +1,22 @@
 package com.example.routes
-
-import com.example.models.Movie
-import com.example.models.movieStorage
-import com.example.models.opinionStorage
+import com.example.models.*
 import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.io.File
 
 fun Route.movieRouting() {
     /**
      * Obtener toodo de Movie
      */
     route("/movie") {
+
+        /**
+         * all: mostrarà un llistat de totes les pel·lícules.
+         */
         get {
             if (movieStorage.isNotEmpty()) {
                 call.respond(movieStorage)
@@ -21,85 +24,146 @@ fun Route.movieRouting() {
                 call.respondText("No Movies found", status = HttpStatusCode.OK)
             }
         }
+
         /**
-         * obtener pelicula por ID
+         * id: mostrarà les dades de la pel·lícula amb l’id indicat.
          */
-        get("{id?}") {
+        get("{id}") {
             val id = call.parameters["id"] ?: return@get call.respondText(
                 "Missing id",
                 status = HttpStatusCode.BadRequest
             )
-            val movie = movieStorage.find { it.id == id } ?: return@get call.respondText(
-                    "No Movie with id $id",
-                    status = HttpStatusCode.NotFound
-                )
+
+            val movie = movieStorage.find { it.id.toString() == id } ?: return@get call.respondText(
+                "No Movie with id $id", status = HttpStatusCode.NotFound
+            )
             call.respond(movie)
         }
         /**
-         * Añade Movie
+         * add: crearà una nova pel·lícula.
          */
         post {
-            val customer = call.receive<Movie>()
-            movieStorage.add(customer)
+            movieStorage.add(call.receive())
             call.respondText("Movie stored correctly", status = HttpStatusCode.Created)
+            call.respond(HttpStatusCode.Created)
         }
-    }
-    /**
-     * Elimina Movie por ID
-     */
-    delete("{id?}") {
-        val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
-        if (movieStorage.removeIf { it.id == id }) {
-            call.respondText("Customer removed correctly", status = HttpStatusCode.Accepted)
-        } else {
-            call.respondText("Not Found", status = HttpStatusCode.NotFound)
-        }
-    }
-    post get@{ //añadir por ID, un comentario al id de la pelicula
-        val id = call.parameters["id"] ?: return@get call.respondText(
-            "Missing id",
-            status = HttpStatusCode.BadRequest
-        )
-        val movie = movieStorage.find { it.id == id } ?: return@get call.respondText(
-            "No Movie with id $id",
-            status = HttpStatusCode.NotFound
-        )
-        call.respond(movie)
-    }
-    get {// mostrar lista por id de comentarios por id de la pelicula
-        val id = call.parameters["id"] ?: return@get call.respondText(
-            "Missing id",
-            status = HttpStatusCode.BadRequest
-        )
-        val opinion = opinionStorage.find { it.idMovie == id } ?: return@get call.respondText(
-            "No Movie with id $id",
-            status = HttpStatusCode.NotFound
-        )
-        call.respond(opinion)
-    }
-    post get@{//actualiza por id
-        val id = call.parameters["id"] ?: return@get call.respondText(
-            "Missing id",
-            status = HttpStatusCode.BadRequest
-        )
-        val movie = movieStorage.find { it.id == id } ?: return@get call.respondText(
-            "No Movie with id $id",
-            status = HttpStatusCode.NotFound
-        )
-        call.respond(movie)
-    }
-    post get@{// id/add añadir comentario en una pelicual
-        val movieId = call.parameters["idMovie"] ?: return@get call.respondText(
-            "Missing id",
-            status = HttpStatusCode.BadRequest
-        )
-        val movie = movieStorage.find { it.idMovie == movieId } ?: return@get call.respondText(
-            "No Movie with id $movieId",
-            status = HttpStatusCode.NotFound
-        )
-        call.respond(movie)
-    }
 
+        /**
+         * delete/id: esborrarà la pel·lícula amb l’id indicat.
+         */
+        delete("{id}") {
+            val movieID = call.parameters["id"]?.toIntOrNull()
+            val result = when (movieID) {
+                null -> call.respond(HttpStatusCode.BadRequest, "ID must be long")
+                else -> {
+                    val movie = movieStorage.firstOrNull { it.id == movieID }
+                    when (movie) {
+                        null -> call.respond(HttpStatusCode.NotFound, "Movie with id $movieID " +
+                                "not found")
+                        else -> {
+                            movieStorage.remove(movie)
+                            call.respond(HttpStatusCode.OK, "Movie $movieID deleted")
+                        }
+                    }
+                }
+            }
+        }
+        /**
+         * update/id: actualitzarà les dades de la pel·lícula amb l’id indicat.
+         */
+        put("{id}") {
+            val movieID = call.parameters["id"]?.toIntOrNull()
+            val movie = call.receive<Movie>()
+            val result = when (movieStorage.firstOrNull { it.id == movieID }) {
+                null -> call.respond(HttpStatusCode.NotFound, "Movie with id ${movieID} not found")
+                else -> {
+                    for (i in movieStorage.indices) {
+                        if (movieStorage[i].id == movieID) {
+                            movieStorage[i] = movie
+                        }
+                    }
+                    call.respond(HttpStatusCode.OK, "Movie Updated")
+                }
+            }
+        }
+
+        route("/Opinions") {
+            /**
+             * id/add: afegirà un comentari a la pel·lícula amb l’id indicat.
+             */
+            post("{idMovie}") {
+                val idMovie = call.parameters["idMovie"]?.toInt()
+                val opinion = call.receive<Opinions>()
+                for (i in movieStorage.indices) {
+                    if (movieStorage[i].idMovie != idMovie) {
+                        call.respond(HttpStatusCode.NotFound, "not found this ID")
+                    } else {
+                        opinionStorage.add(opinion)
+                        call.respond(HttpStatusCode.OK, "Opinion Added")
+                    }
+                }
+            }
+
+            /**
+             * id/comments: mostrarà un llistat dels comentaris de la pel·lícula amb l’id indicat.
+             */
+            get("{idMovie}") {
+                val id =
+                    call.parameters["idMovie"] ?: return@get call.respondText(
+                        "Missing id",
+                        status = HttpStatusCode.BadRequest
+                    )
+                val opinion = opinionStorage.find { it.idMovie.toString() == id } ?: return@get call.respondText(
+                    "No opinions with id $id", status = HttpStatusCode.NotFound
+                )
+                call.respond(opinion)
+            }
+        }
+    }
+        route("/Guy") {
+            post() {
+                val datos = call.receiveMultipart()
+                var id = ""
+                var name = ""
+                var fileName = ""
+                datos.forEachPart { part ->
+                    when (part) {
+                        is PartData.FormItem -> {
+                            if (part.name == "id") {
+                                 id = part.value
+                                } else {
+                                 name = part.value
+                                }
+                            }
+                        is PartData.FileItem -> {
+                            fileName = part.originalFileName as String
+                            var fileBytes = part.streamProvider().readBytes()
+                            File("C:\\Users\\Joel Rodriguez\\Documents\\$fileName").writeBytes(fileBytes)
+                            }else -> {}
+                        }}
+                        val guy = Guy(id, name, fileName)
+                        guyList.add(guy)
+                        call.respondText("Guy stored correctly and \"$fileName is uploaded to 'uploads/$fileName'\"", status = HttpStatusCode.Created)
+
+                    }
+            get("/uploads/{imageName}") {
+                val imageName = call.parameters["imageName"]
+                var file = File("C:\\Users\\Joel Rodriguez\\Documents\\$imageName")
+                if(file.exists()){
+                    call.respondFile(File("C:\\Users\\Joel Rodriguez\\Documents\\$imageName"))
+                }
+                else{
+                    call.respondText("Image not found", status = HttpStatusCode.NotFound)
+                }
+            }
+            get {
+                if (guyList.isNotEmpty()) {
+                    call.respond(guyList)
+                } else {
+                    call.respondText("No Movies found", status = HttpStatusCode.OK)
+                }
+            }
+        }
 }
 
 

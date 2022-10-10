@@ -1,7 +1,10 @@
 package com.example.models
 
-data class Coments (val id: String, val idMovie: String, val coment: String)
+import kotlinx.serialization.Serializable
 
-val opinionStorage = mutableListOf<Coments>(
-    Coments("19292", "adas", "asdasd")
+@Serializable
+data class Opinions (val id: Int, val idMovie: Int, val coment: String)
+
+val opinionStorage = mutableListOf<Opinions>(
+    Opinions(19292, 15, "asdasd")
 )
