@@ -8,4 +8,5 @@ fun Application.configureRouting() {
     routing {
         movieRouting()
     }
+
 }

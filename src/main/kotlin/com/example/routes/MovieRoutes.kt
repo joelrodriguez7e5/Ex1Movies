@@ -3,9 +3,11 @@ import com.example.models.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
+import io.ktor.server.html.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlinx.html.*
 import java.io.File
 
 fun Route.movieRouting() {
@@ -58,8 +60,11 @@ fun Route.movieRouting() {
                 else -> {
                     val movie = movieStorage.firstOrNull { it.id == movieID }
                     when (movie) {
-                        null -> call.respond(HttpStatusCode.NotFound, "Movie with id $movieID " +
-                                "not found")
+                        null -> call.respond(
+                            HttpStatusCode.NotFound, "Movie with id $movieID " +
+                                    "not found"
+                        )
+
                         else -> {
                             movieStorage.remove(movie)
                             call.respond(HttpStatusCode.OK, "Movie $movieID deleted")
@@ -120,50 +125,104 @@ fun Route.movieRouting() {
             }
         }
     }
-        route("/Guy") {
-            post() {
-                val datos = call.receiveMultipart()
-                var id = ""
-                var name = ""
-                var fileName = ""
-                datos.forEachPart { part ->
-                    when (part) {
-                        is PartData.FormItem -> {
-                            if (part.name == "id") {
-                                 id = part.value
-                                } else {
-                                 name = part.value
-                                }
-                            }
-                        is PartData.FileItem -> {
-                            fileName = part.originalFileName as String
-                            var fileBytes = part.streamProvider().readBytes()
-                            File("C:\\Users\\Joel Rodriguez\\Documents\\$fileName").writeBytes(fileBytes)
-                            }else -> {}
-                        }}
-                        val guy = Guy(id, name, fileName)
-                        guyList.add(guy)
-                        call.respondText("Guy stored correctly and \"$fileName is uploaded to 'uploads/$fileName'\"", status = HttpStatusCode.Created)
-
+    route("/Guy") {
+        post() {
+            val datos = call.receiveMultipart()
+            var id = ""
+            var name = ""
+            var fileName = ""
+            datos.forEachPart { part ->
+                when (part) {
+                    is PartData.FormItem -> {
+                        if (part.name == "id") {
+                            id = part.value
+                        } else {
+                            name = part.value
+                        }
                     }
-            get("/uploads/{imageName}") {
-                val imageName = call.parameters["imageName"]
-                var file = File("C:\\Users\\Joel Rodriguez\\Documents\\$imageName")
-                if(file.exists()){
-                    call.respondFile(File("C:\\Users\\Joel Rodriguez\\Documents\\$imageName"))
-                }
-                else{
-                    call.respondText("Image not found", status = HttpStatusCode.NotFound)
+
+                    is PartData.FileItem -> {
+                        fileName = part.originalFileName as String
+                        var fileBytes = part.streamProvider().readBytes()
+                        File("C:\\Users\\Joel Rodriguez\\Documents\\$fileName").writeBytes(fileBytes)
+                    }
+
+                    else -> {}
                 }
             }
-            get {
-                if (guyList.isNotEmpty()) {
-                    call.respond(guyList)
-                } else {
-                    call.respondText("No Movies found", status = HttpStatusCode.OK)
+            val guy = Guy(id, name, fileName)
+            guyList.add(guy)
+            call.respondText(
+                "Guy stored correctly and \"$fileName is uploaded to 'uploads/$fileName'\"",
+                status = HttpStatusCode.Created
+            )
+
+        }
+        get("/uploads/{imageName}") {
+            val imageName = call.parameters["imageName"]
+            var file = File("C:\\Users\\Joel Rodriguez\\Documents\\$imageName")
+            if (file.exists()) {
+                call.respondFile(File("C:\\Users\\Joel Rodriguez\\Documents\\$imageName"))
+            } else {
+                call.respondText("Image not found", status = HttpStatusCode.NotFound)
+            }
+        }
+        get {
+            if (guyList.isNotEmpty()) {
+                call.respond(guyList)
+            } else {
+                call.respondText("No Movies found", status = HttpStatusCode.OK)
+            }
+        }
+    }
+    route("/") {
+        get() {
+            call.respondHtml(HttpStatusCode.OK) {
+                head {
+                    title("KTOR")
+                }
+                body {
+                    h1 {
+                        +"Movies"
+                    }
+                    if(movieStorage.isNotEmpty()){
+                        table {
+                            tr{
+                                td{
+                                    +"DIRECTOR"
+                                }
+                                td{
+                                    +"GENERO"
+                                }
+                                td{
+                                    +"TITULO"
+                                }
+                                td{
+                                    +"ID"
+                                }
+                            }
+                            for (i in movieStorage){
+                                tr {
+                                    td {
+                                        +i.director
+                                    }
+                                    td {
+                                        +i.genere
+                                    }
+                                    td {
+                                        +i.titol
+                                    }
+                                    td{
+                                        +i.id.toString()
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
+    }
 }
 
 
