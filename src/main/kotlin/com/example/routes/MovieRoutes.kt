@@ -1,5 +1,6 @@
 package com.example.routes
 import com.example.models.*
+import com.example.templates.LayoutTemplate
 import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.server.application.*
@@ -179,29 +180,30 @@ fun Route.movieRouting() {
         get() {
             call.respondHtml(HttpStatusCode.OK) {
                 head {
+
                     title("KTOR")
                 }
                 body {
                     h1 {
                         +"Movies"
                     }
-                    if(movieStorage.isNotEmpty()){
+                    if (movieStorage.isNotEmpty()) {
                         table {
-                            tr{
-                                td{
+                            tr {
+                                td {
                                     +"DIRECTOR"
                                 }
-                                td{
+                                td {
                                     +"GENERO"
                                 }
-                                td{
+                                td {
                                     +"TITULO"
                                 }
-                                td{
+                                td {
                                     +"ID"
                                 }
                             }
-                            for (i in movieStorage){
+                            for (i in movieStorage) {
                                 tr {
                                     td {
                                         +i.director
@@ -212,7 +214,7 @@ fun Route.movieRouting() {
                                     td {
                                         +i.titol
                                     }
-                                    td{
+                                    td {
                                         +i.id.toString()
                                     }
                                 }
@@ -222,6 +224,15 @@ fun Route.movieRouting() {
                 }
             }
         }
+    }
+
+    route("/film") {
+        get("all") {
+            call.respondHtmlTemplate(LayoutTemplate()) {
+                this.content = "all"
+            }
+        }
+
     }
 }
 
