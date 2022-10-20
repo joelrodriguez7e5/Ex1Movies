@@ -22,6 +22,44 @@ class AllFilmsTemplate: Template<FlowContent> {
                     }
                 }
             }
+            h1{
+                +"Llista de pelis"
+            }
+            table {
+                tr {
+                    td {
+                        +"IMG"
+                    }
+                    td{
+                        +"Film title"
+                    }
+                    td{
+                        +"Show details"
+                    }
+                }
+                tr {
+                    td {
+                        +"IMG"
+                    }
+                    td {
+                        +"Film title"
+                    }
+                    td {
+                        +"Show details"
+                    }
+                }
+                tr {
+                    td {
+                        +"IMG"
+                    }
+                    td {
+                        +"Film title"
+                    }
+                    td {
+                        +"Show details"
+                    }
+                }
+            }
         }
     }
 }
