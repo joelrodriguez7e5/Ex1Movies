@@ -9,22 +9,42 @@ class AllFilmsTemplate: Template<FlowContent> {
             img {
                 src = "/static/ktor.png"
             }
-            nav {
+            div {
                 ul {
                     li {
-                        a { +"Llistat de pelis" }
+                        a {
+                            href = "#LlistatDePelis"
+                            p {
+                                +"Llistat de pelis"
+                            }
+                        }
                     }
                     li {
-                        a { +"Nova peli" }
+                        a {
+                            href = "#NovaPeli"
+                            p { +"Nova peli" }
+                        }
                     }
                     li {
-                        a { +"About us" }
+                        class seach
+                        input {
+
+                        }
+                    }
+                    li {
+                        a {
+                            href = "#"
+                            p { +"About us" }
+                        }
                     }
                 }
             }
-            h1{
-                +"Llista de pelis"
+            div {
+                h1{
+                    +"Llista de pelis"
+                }
             }
+
             table {
                 tr {
                     td {
