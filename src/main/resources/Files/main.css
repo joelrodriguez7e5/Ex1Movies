@@ -1,5 +1,6 @@
 body{
-    align-content: center;
+    display: flex;
+    flex-direction: column;
 }
 img {
     display: block;
@@ -10,9 +11,12 @@ img {
 }
 
 ul {
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 950px;
+    padding-bottom: 15px;
     border: black;
-    width:1000px;
-    margin:0 auto;
     list-style:none;
 }
 ul li {
@@ -29,11 +33,13 @@ ul a {
     text-align:center;
     width:150px; /* fixed width */
     text-decoration:none;
+    margin-bottom: 10px;
 }
 h1{
-    width:950px;
-    margin:0 auto;
-
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+    padding-bottom: 15px;
 }
 table{
     border-collapse: collapse;
@@ -41,5 +47,13 @@ table{
 table, th, td {
     padding: 30px;
     border: 1px solid black;
+}
+
+table{
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 900px;
+    padding-bottom: 15px;
 }
 

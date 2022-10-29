@@ -232,6 +232,11 @@ fun Route.movieRouting() {
                 this.content = "all"
             }
         }
+        post("new"){
+            call.respondHtmlTemplate(LayoutTemplate()){
+                this.content = "new"
+            }
+        }
 
     }
 }

@@ -13,7 +13,7 @@ class AllFilmsTemplate: Template<FlowContent> {
                 ul {
                     li {
                         a {
-                            href = "#LlistatDePelis"
+                            href = "all"
                             p {
                                 +"Llistat de pelis"
                             }
@@ -21,7 +21,7 @@ class AllFilmsTemplate: Template<FlowContent> {
                     }
                     li {
                         a {
-                            href = "#NovaPeli"
+                            href = "new"
                             p { +"Nova peli" }
                         }
                     }
@@ -33,7 +33,7 @@ class AllFilmsTemplate: Template<FlowContent> {
                     }
                     li {
                         a {
-                            href = "#"
+                            href = "about"
                             p { +"About us" }
                         }
                     }
@@ -44,39 +44,41 @@ class AllFilmsTemplate: Template<FlowContent> {
                     +"Llista de pelis"
                 }
             }
-
-            table {
-                tr {
-                    td {
-                        +"IMG"
+            div {
+                class table
+                table {
+                    tr {
+                        td {
+                            +"IMG"
+                        }
+                        td {
+                            +"Film title"
+                        }
+                        td {
+                            +"Show details"
+                        }
                     }
-                    td{
-                        +"Film title"
+                    tr {
+                        td {
+                            +"IMG"
+                        }
+                        td {
+                            +"Film title"
+                        }
+                        td {
+                            +"Show details"
+                        }
                     }
-                    td{
-                        +"Show details"
-                    }
-                }
-                tr {
-                    td {
-                        +"IMG"
-                    }
-                    td {
-                        +"Film title"
-                    }
-                    td {
-                        +"Show details"
-                    }
-                }
-                tr {
-                    td {
-                        +"IMG"
-                    }
-                    td {
-                        +"Film title"
-                    }
-                    td {
-                        +"Show details"
+                    tr {
+                        td {
+                            +"IMG"
+                        }
+                        td {
+                            +"Film title"
+                        }
+                        td {
+                            +"Show details"
+                        }
                     }
                 }
             }
