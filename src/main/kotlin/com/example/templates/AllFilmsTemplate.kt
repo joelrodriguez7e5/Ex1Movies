@@ -27,8 +27,13 @@ class AllFilmsTemplate: Template<FlowContent> {
                     }
                     li {
                         class seach
-                        input {
-
+                        form {
+                            action = "detail"
+                            input {
+                                type = InputType.text
+                                id = "search"
+                                name = "search"
+                            }
                         }
                     }
                     li {

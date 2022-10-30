@@ -1,6 +1,5 @@
 package com.example.templates
 
-import io.ktor.http.*
 import io.ktor.server.html.*
 import kotlinx.html.*
 
@@ -22,10 +21,10 @@ class LayoutTemplate: Template<HTML> {
 
                 }
                 if (content == "id"){ //mostra el detall de la pel·lícula amb l’id indicat.
-
+                    insert(DetailFilmsTemplate(), TemplatePlaceholder())
                 }
                 if (content == "about"){ //pàgina d’informació (el teu nom i correu).
-
+                    insert(AboutTemplate(), TemplatePlaceholder())
                 }
             }
         }

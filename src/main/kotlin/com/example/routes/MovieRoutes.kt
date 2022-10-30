@@ -232,11 +232,19 @@ fun Route.movieRouting() {
                 this.content = "all"
             }
         }
-        post("new"){
+        get("new"){
             call.respondHtmlTemplate(LayoutTemplate()){
                 this.content = "new"
             }
         }
+        post("add"){
+
+        }
+        get("about"){
+            call.respondHtmlTemplate(LayoutTemplate()){
+                this.content = "about"
+        }
+   }
 
     }
 }

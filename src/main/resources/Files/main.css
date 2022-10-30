@@ -57,3 +57,7 @@ table{
     padding-bottom: 15px;
 }
 
+.form{
+    display:inline-flex;
+    justify-content: center;
+}
