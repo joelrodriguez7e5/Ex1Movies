@@ -240,6 +240,14 @@ fun Route.movieRouting() {
         post("add"){
 
         }
+        get ("detail") {
+            val id = call.request.queryParameters["search"]
+            call.respondHtmlTemplate(LayoutTemplate()) {
+                this.content = "detail"
+                this.id = id!!
+                println(this.id)
+            }
+        }
         get("about"){
             call.respondHtmlTemplate(LayoutTemplate()){
                 this.content = "about"

@@ -12,5 +12,8 @@ data class Movie(val id: Int,
 
 val movieStorage = mutableListOf<Movie>(
     Movie(22, "FastAndFurious", 2015, "Accion", "Jan LI", 85),
-    Movie(29, "Matrix", 2010, "Accion", "Neo", 50))
+    Movie(29, "Matrix", 2010, "Accion", "Neo", 50),
+    Movie(30, "Matrix 2", 1999, "Accion", "Hola", 20),
+    Movie(22, "FastAndFurious", 2015, "Accion", "Jan LI", 85)
+)
 

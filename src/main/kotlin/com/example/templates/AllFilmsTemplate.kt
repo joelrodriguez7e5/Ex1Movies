@@ -1,5 +1,6 @@
 package com.example.templates
 
+import com.example.models.movieStorage
 import io.ktor.server.html.*
 import kotlinx.html.*
 
@@ -52,41 +53,21 @@ class AllFilmsTemplate: Template<FlowContent> {
             div {
                 class table
                 table {
-                    tr {
-                        td {
-                            +"IMG"
+                    movieStorage.forEach { it ->
+                        tr {
+                            td {
+                                +"IMG"
+                            }
+                            td {
+                                +it.titol
+                            }
+                            td {
+                                + "Genero: ${it.genere}, \nAño: ${it.any}, \nDirector:${it.director}, \nIdMovie: ${it.idMovie}"
+                            }
                         }
-                        td {
-                            +"Film title"
-                        }
-                        td {
-                            +"Show details"
-                        }
-                    }
-                    tr {
-                        td {
-                            +"IMG"
-                        }
-                        td {
-                            +"Film title"
-                        }
-                        td {
-                            +"Show details"
-                        }
-                    }
-                    tr {
-                        td {
-                            +"IMG"
-                        }
-                        td {
-                            +"Film title"
-                        }
-                        td {
-                            +"Show details"
                         }
                     }
                 }
             }
         }
     }
-}

@@ -2,29 +2,28 @@ package com.example.templates
 
 import com.example.models.movieStorage
 import io.ktor.server.html.*
-import kotlinx.html.FlowContent
-import kotlinx.html.header
-import kotlinx.html.id
-import kotlinx.html.p
+import kotlinx.html.*
 
-class DetailFilmsTemplate: Template<FlowContent> {
+class DetailFilmsTemplate(val id: String): Template<FlowContent> {
     override fun FlowContent.apply() {
+
         header {
-           val movie =  movieStorage.filter { it.id == id.toInt() }
-            p {
-                movie[0].id
-            }
-            p {
-                movie[0].any
-            }
-            p {
-                movie[0].director
-            }
-            p {
-                movie[0].genere
-            }
-            p {
-                movie[0].titol
+            println("3 ${id}")
+            table {
+
+                movieStorage.filter { it.id == id.toInt() }.forEach { it ->
+                    tr {
+                        td {
+                            +"IMG"
+                        }
+                        td {
+                            +it.titol
+                        }
+                        td {
+                            +"Genero: ${it.genere}, \nAño: ${it.any}, \nDirector:${it.director}, \nIdMovie: ${it.idMovie}"
+                        }
+                    }
+                }
             }
         }
     }
